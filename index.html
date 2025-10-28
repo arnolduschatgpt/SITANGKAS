@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SITANGKAS — Sistem Informasi Kenaikan Pangkat ASN</title>
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png
+"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 1.2s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-[#F4F8FA] text-gray-800">
+    <script>
+      // 🔒 Cegah akses login jika sudah login & token masih aktif
+      const token = localStorage.getItem("token");
+      const expiredAt = localStorage.getItem("expiredAt");
+
+      if (token && expiredAt) {
+        const now = new Date();
+        const expiry = new Date(expiredAt);
+
+        if (!isNaN(expiry.getTime()) && expiry.getTime() > now.getTime()) {
+          window.location.replace("dashboard.html");
+        } else {
+          // Token kadaluarsa → hapus semua data login
+          localStorage.clear();
+        }
+      }
+    </script>
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed w-full z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo -->
+          <div class="flex items-center space-x-3">
+            <img
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+              alt="Logo SITANGKAS"
+              class="w-12 h-12 object-contain"
+            />
+            <h1 class="text-xl font-bold text-[#0A7075] tracking-wide">
+              SITANGKAS
+            </h1>
+          </div>
+
+          <!-- Menu Desktop -->
+          <div
+            class="hidden md:flex space-x-8 items-center text-sm font-medium"
+          >
+            <a
+              href="#tentang"
+              class="text-gray-700 hover:text-[#0C969C] transition"
+              >Tentang</a
+            >
+            <a
+              href="#fitur"
+              class="text-gray-700 hover:text-[#0C969C] transition"
+              >Fitur</a
+            >
+            <a href="#sop" class="text-gray-700 hover:text-[#0C969C] transition"
+              >SOP</a
+            >
+            <a
+              href="#data"
+              class="text-gray-700 hover:text-[#0C969C] transition"
+              >Data</a
+            >
+            <a
+              href="#kontak"
+              class="text-gray-700 hover:text-[#0C969C] transition"
+              >Kontak</a
+            >
+            <a
+              href="login.html"
+              class="bg-[#0C969C] text-white px-4 py-2 rounded-lg shadow-sm hover:bg-[#0A7075] transition"
+              >Masuk Admin</a
+            >
+          </div>
+
+          <!-- Hamburger (Mobile) -->
+          <button
+            id="menuBtn"
+            class="md:hidden text-gray-700 focus:outline-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden bg-white border-t border-gray-100"
+      >
+        <a
+          href="#tentang"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >Tentang</a
+        >
+        <a href="#fitur" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >Fitur</a
+        >
+        <a href="#sop" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >SOP</a
+        >
+        <a href="#data" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >Data</a
+        >
+        <a href="#kontak" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >Kontak</a
+        >
+        <a
+          href="login.html"
+          class="block px-4 py-2 text-white bg-[#0C969C] hover:bg-[#0A7075] transition"
+          >Masuk Admin</a
+        >
+      </div>
+    </nav>
+
+    <!-- Hero Section: Dokumen Profesional (CTA Fokus) -->
+    <section
+      class="relative bg-gradient-to-br from-[#032F30] to-[#0A7075] text-white pt-32 pb-24 px-6 lg:px-20 overflow-hidden"
+    >
+      <div
+        class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center fade-in"
+      >
+        <!-- Kiri: Konten -->
+        <div class="z-10">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            Sistem Tata Kelola Kenaikan Pangkat ASN
+          </h2>
+          <p class="text-white/90 text-lg mb-10 leading-relaxed max-w-md">
+            Kelola dan verifikasi berkas kenaikan pangkat ASN dengan lebih
+            efisien, cepat, dan transparan melalui sistem digital SITANGKAS.
+          </p>
+
+          <!-- CTA utama -->
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSf000R_PXhrAiEa5knQ_O-qNAQAFleKWRXhryS2YxySK1XH9w/viewform"
+            target="_blank"
+            class="group relative inline-flex items-center gap-3 bg-[#6BA3BE] text-[#032F30] font-semibold px-10 py-4 rounded-xl shadow-xl hover:bg-[#0C969C] hover:text-white transition-all duration-300"
+          >
+            <!-- Efek glow -->
+            <span
+              class="absolute inset-0 rounded-xl bg-[#6BA3BE]/40 blur-md opacity-0 group-hover:opacity-100 transition-opacity"
+            ></span>
+
+            <!-- Ikon -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 relative z-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16h8M8 12h8m-8-4h8M4 6h16v12H4z"
+              />
+            </svg>
+
+            <!-- Teks -->
+            <span class="relative z-10 tracking-wide"
+              >Isi Formulir Pengajuan</span
+            >
+          </a>
+
+          <!-- Garis aksen -->
+          <div class="h-1 w-32 bg-[#6BA3BE] mt-10 rounded-full"></div>
+        </div>
+
+        <!-- Kanan: Ilustrasi -->
+        <div class="flex justify-center md:justify-end relative">
+          <div class="relative w-80 md:w-[420px]">
+            <div
+              class="absolute -inset-4 bg-[#0C969C]/30 rounded-3xl blur-xl animate-pulse"
+            ></div>
+            <img
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/ilustrasi.png
+"
+              alt="Ilustrasi Dokumen Digital"
+              class="relative w-full drop-shadow-2xl rounded-2xl hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Pola dekoratif halus -->
+      <div
+        class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pw-maze-white.png')] opacity-10"
+      ></div>
+
+      <!-- Cahaya dekoratif -->
+      <div
+        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#0C969C]/40 rounded-full blur-[100px]"
+      ></div>
+    </section>
+
+    <!-- Tentang -->
+    <section
+      id="tentang"
+      class="py-20 px-6 lg:px-20 bg-white border-b border-gray-100"
+    >
+      <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h3 class="text-2xl font-bold text-[#0A7075] mb-4">
+            Tentang SITANGKAS
+          </h3>
+          <p class="text-gray-700 leading-relaxed">
+            SITANGKAS adalah sistem informasi internal untuk memeriksa dan
+            mengelola kelengkapan berkas kenaikan pangkat ASN. Sistem ini
+            dirancang untuk memastikan proses lebih cepat, akurat, dan
+            terdokumentasi dengan baik.
+          </p>
+        </div>
+        <div class="flex justify-center">
+          <div
+            class="bg-[#F4F8FA] rounded-xl p-6 shadow-md border border-gray-100"
+          >
+            <h4 class="font-semibold text-[#0C969C] mb-2">Tujuan Utama:</h4>
+            <ul class="list-disc pl-6 text-gray-700 text-sm leading-relaxed">
+              <li>Mempercepat proses pengajuan kenaikan pangkat ASN</li>
+              <li>Meningkatkan transparansi verifikasi berkas</li>
+              <li>Mempermudah koordinasi antar unit terkait</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fitur -->
+    <section id="fitur" class="py-20 px-6 lg:px-20 bg-[#F9FAFB]">
+      <h3 class="text-2xl font-bold text-center text-[#0A7075] mb-12">
+        Fitur Utama
+      </h3>
+      <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
+        <div class="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+          <div
+            class="w-12 h-12 flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-4"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7 text-[#0C969C]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-[#032F30]">
+            Verifikasi Otomatis
+          </h4>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Sistem secara otomatis memeriksa kelengkapan dokumen pengajuan ASN
+            agar lebih efisien dan akurat.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+          <div
+            class="w-12 h-12 flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-4"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7 text-[#0C969C]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h18v18H3V3zM9 9h6v6H9V9z"
+              />
+            </svg>
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-[#032F30]">
+            Tampilan Responsif
+          </h4>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Dapat diakses dari perangkat apa pun dengan antarmuka yang tetap
+            elegan dan proporsional.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+          <div
+            class="w-12 h-12 flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-4"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7 text-[#0C969C]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-[#032F30]">
+            Proses Cepat
+          </h4>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Proses pengajuan dan verifikasi lebih cepat dengan sistem
+            terintegrasi dan manajemen data otomatis.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOP Section -->
+    <section
+      id="sop"
+      class="py-20 px-6 lg:px-20 bg-white border-t border-gray-100"
+    >
+      <h3 class="text-2xl font-bold text-center text-[#0A7075] mb-12">
+        Standar Operasional Prosedur (SOP)
+      </h3>
+
+      <div class="max-w-3xl mx-auto">
+        <div
+          class="bg-[#F9FAFB] p-10 rounded-2xl shadow hover:shadow-lg transition text-center"
+        >
+          <div
+            class="w-14 h-14 mx-auto flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-6"
+          >
+            <!-- 🔄 Ganti ikon download jadi ikon dokumen -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-8 h-8 text-[#0C969C]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6M9 8h6M4 6a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+              />
+            </svg>
+          </div>
+
+          <h4 class="text-xl font-semibold text-[#032F30] mb-3">
+            SOP Pengusulan Kenaikan Pangkat ASN
+          </h4>
+          <p class="text-gray-600 mb-8 leading-relaxed max-w-md mx-auto">
+            Panduan resmi Dinas Pertanian Kabupaten Sikka tentang alur dan
+            tahapan pengusulan kenaikan pangkat ASN secara digital melalui
+            sistem SITANGKAS.
+          </p>
+
+          <a
+            href="sop.html"
+            class="group inline-flex items-center gap-3 bg-[#0C969C] text-white font-medium px-8 py-3 rounded-xl shadow hover:bg-[#0A7075] transition-all duration-300"
+          >
+            <!-- 📘 Ikon dokumen kecil di tombol -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6M9 8h6M4 6a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+              />
+            </svg>
+            <span>Lihat SOP Lengkap</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ Section Baru: Style SOP + SVG Icons -->
+    <section id="data" class="py-16 mt-14">
+      <div class="max-w-5xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-[#0A7075] mb-2">
+          Data Usulan Kenaikan Pangkat ASN
+        </h2>
+        <p class="text-gray-600 mb-8">
+          Lihat dan pantau seluruh pengajuan kenaikan pangkat yang telah dikirim
+          melalui SITANGKAS
+        </p>
+
+        <!-- Card Style ala SOP -->
+        <div
+          class="bg-white shadow-xl border border-gray-100 rounded-2xl p-8 mx-4"
+        >
+          <div class="flex flex-col items-center gap-4 text-center">
+            <!-- ✅ Icon Tabel (SVG) -->
+            <div
+              class="w-16 h-16 bg-[#0A7075] bg-opacity-10 text-[#0A7075] flex justify-center items-center rounded-xl p-2"
+            >
+              <svg
+                width="36"
+                height="36"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 3h18a1 1 0 011 1v4H2V4a1 1 0 011-1zm19 7H2v5h20v-5zm0 7H2v3a1 1 0 001 1h18a1 1 0 001-1v-3z"
+                />
+              </svg>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base max-w-lg">
+              Data berikut merupakan hasil input langsung oleh ASN melalui
+              sistem SITANGKAS.
+            </p>
+
+            <!-- ✅ Tombol dengan SVG mata -->
+            <a
+              href="tampilData.html"
+              class="bg-[#0A7075] text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-[#0C969C] transition inline-flex items-center gap-3"
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="currentColor"
+                viewBox="0 0 576 512"
+              >
+                <path
+                  d="M572.52 241.4c1.87 2.84 3.48 5.84 4.73 9-.24.6-.47 1.21-.8 1.79 
+                     C518.87 343.45 407.81 416 288 416S57.13 343.45.55 252.22c-.33-.58-.56-1.19-.8-1.79 
+                     1.26-3.17 2.87-6.17 4.73-9C57.13 168.55 168.19 96 288 96s230.87 72.55 284.52 145.4zM288 368
+                     a112 112 0 100-224 112 112 0 000 224zm0-176a64 64 0 110 128 64 64 0 010-128z"
+                />
+              </svg>
+              Lihat Data Usulan
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontak -->
+    <section
+      id="kontak"
+      class="bg-white py-16 px-6 lg:px-20 text-center md:text-left"
+    >
+      <h3 class="text-2xl font-bold text-[#0A7075] mb-4">Kontak</h3>
+      <p class="text-gray-700">
+        Hubungi tim administrator untuk bantuan atau pertanyaan lebih lanjut
+        mengenai SITANGKAS.
+      </p>
+      <p class="text-gray-600 mt-2">
+        Email:
+        <a
+          href="mailto:sitangkas@instansi.go.id"
+          class="text-[#0C969C] hover:underline"
+        >
+          sitangkas@instansi.go.id
+        </a>
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="bg-[#274D60] text-white py-6 text-center text-sm shadow-inner mt-10"
+    >
+      <p class="italic mb-1">
+        "Transparan, Cepat, dan Akuntabel untuk ASN yang Profesional."
+      </p>
+      © <span id="year"></span> SITANGKAS — Dinas Pertanian Kabupaten Sikka
+    </footer>
+
+    <!-- Script -->
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      const menuBtn = document.getElementById("menuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      let menuOpen = false;
+
+      menuBtn.addEventListener("click", () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle("hidden", !menuOpen);
+      });
+    </script>
+  </body>
+</html>
