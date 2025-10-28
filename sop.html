@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOP — SITANGKAS</title>
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-[#F4F8FA] text-gray-800">
+    <script>
+      // 🔒 Cegah akses login jika sudah login & token masih aktif
+      const token = localStorage.getItem("token");
+      const expiredAt = localStorage.getItem("expiredAt");
+
+      if (token && expiredAt) {
+        const now = new Date();
+        const expiry = new Date(expiredAt);
+
+        if (!isNaN(expiry.getTime()) && expiry.getTime() > now.getTime()) {
+          window.location.replace("dashboard.html");
+        } else {
+          // Token kadaluarsa → hapus semua data login
+          localStorage.clear();
+        }
+      }
+    </script>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed w-full z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-3">
+            <img
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+              alt="Logo SITANGKAS"
+              class="w-10 h-10"
+            />
+            <h1 class="text-lg font-bold text-[#0A7075] tracking-wide">
+              SITANGKAS
+            </h1>
+          </div>
+          <a
+            href="index.html"
+            class="bg-[#0C969C] text-white px-4 py-2 rounded-lg text-sm shadow-sm hover:bg-[#0A7075] transition"
+            >Kembali ke Beranda</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header
+      class="pt-28 pb-12 text-center bg-gradient-to-br from-[#032F30] to-[#0A7075] text-white fade-in"
+    >
+      <h2 class="text-3xl font-bold mb-3">
+        SOP Pengusulan Kenaikan Pangkat ASN
+      </h2>
+      <p class="text-white/80">
+        Dinas Pertanian Kabupaten Sikka — Sistem Tata Kelola Kenaikan Pangkat
+        ASN (SITANGKAS)
+      </p>
+    </header>
+
+    <!-- Konten -->
+    <main
+      class="max-w-5xl mx-auto py-16 px-6 bg-white rounded-2xl shadow-md mt-10 fade-in"
+    >
+      <h3 class="text-xl font-bold text-[#0A7075] mb-4">
+        PEMERINTAH KABUPATEN SIKKA
+      </h3>
+      <p class="font-medium mb-1">DINAS PERTANIAN</p>
+      <p class="text-sm text-gray-600 mb-6">
+        Jln. Litbang, Wairklau – Telp. (0382) 21026 – Kode Pos: 86113 — MAUMERE
+      </p>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">Persyaratan</h3>
+      <ol class="list-decimal pl-6 mb-6 space-y-1 text-gray-700">
+        <li>
+          Surat Pengantar dari Kepala Bidang/Subbag terkait kepada Kepala Dinas
+          Pertanian Kabupaten Sikka.
+        </li>
+        <li>Surat Keputusan (SK) Pangkat Terakhir.</li>
+        <li>Surat Keputusan (SK) Jabatan Terakhir.</li>
+        <li>Penilaian Kinerja (SKP) 2 Tahun Terakhir.</li>
+        <li>
+          PAK (Penetapan Angka Kredit) Asli/Salinan yang dilegalisir (bagi
+          Jabatan Fungsional).
+        </li>
+        <li>FC. Sertifikat Kompetensi (Bagi kenaikan Jabatan Fungsional).</li>
+        <li>FC. SK Mutasi (Jika Berpindah Instansi Atau Jabatan).</li>
+      </ol>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">Prosedur</h3>
+      <ol class="list-decimal pl-6 mb-6 space-y-1 text-gray-700">
+        <li>
+          ASN mengunggah seluruh berkas persyaratan ke Sistem Tata Kelola
+          Kenaikan Pangkat Digital di web SITANGKAS Dinas Pertanian Kabupaten
+          Sikka.
+        </li>
+        <li>
+          Staf Subbag Umum dan Kepegawaian melakukan verifikasi kelengkapan dan
+          keabsahan berkas yang diunggah.
+        </li>
+        <li>
+          Jika berkas lengkap, staf mengusulkan kenaikan pangkat dengan
+          pengantar kepala OPD ke BKPSDMD setempat.
+        </li>
+        <li>
+          Jika berkas belum lengkap, staf membuat catatan pengembalian melalui
+          notifikasi pada sistem agar ASN melengkapi kekurangan.
+        </li>
+        <li>
+          Kasubbag Umum dan Kepegawaian melakukan pemeriksaan akhir dan validasi
+          terhadap berkas yang telah diverifikasi.
+        </li>
+        <li>
+          Staf menyiapkan Surat Pengantar Kepala Dinas Pertanian kepada Kepala
+          BKPSDM Kabupaten Sikka.
+        </li>
+        <li>
+          Berkas fisik dikirimkan ke BKPSDM Kabupaten Sikka untuk diproses lebih
+          lanjut.
+        </li>
+      </ol>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Waktu Penyelesaian
+      </h3>
+      <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-1">
+        <li>Verifikasi Berkas: 1–2 hari kerja.</li>
+        <li>
+          Proses Pemeriksaan & Penandatanganan Surat Pengantar: 3–5 hari kerja.
+        </li>
+        <li>Total waktu penyelesaian internal: ±5–7 hari kerja.</li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">Biaya</h3>
+      <p class="mb-6 text-gray-700">Tidak dipungut biaya (Gratis / Nihil).</p>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">Produk Layanan</h3>
+      <p class="mb-6 text-gray-700">
+        Surat Pengantar Usulan Kenaikan Pangkat ASN dari Kepala Dinas Pertanian
+        Kabupaten Sikka kepada Kepala BKPSDM Kabupaten Sikka.
+      </p>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Pengaduan / Saran
+      </h3>
+      <ol class="list-decimal pl-6 mb-6 text-gray-700 space-y-1">
+        <li>
+          Disampaikan langsung kepada Sub Bagian Umum dan Kepegawaian Dinas
+          Pertanian Kabupaten Sikka.
+        </li>
+        <li>
+          Melalui kotak saran / layanan pengaduan pada Sistem Informasi Digital
+          SITANGKAS.
+        </li>
+      </ol>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">Dasar Hukum</h3>
+      <ol class="list-decimal pl-6 mb-6 text-gray-700 space-y-1">
+        <li>
+          Undang-Undang Nomor 20 Tahun 2023 tentang Aparatur Sipil Negara.
+        </li>
+        <li>
+          Peraturan Pemerintah Nomor 12 Tahun 2022 tentang Manajemen Pegawai
+          Negeri Sipil.
+        </li>
+        <li>
+          Peraturan Menteri PANRB Nomor 1 Tahun 2023 tentang Jabatan Fungsional.
+        </li>
+        <li>
+          Peraturan Badan Kepegawaian Negara Nomor 3 Tahun 2023 tentang Angka
+          Kredit Jabatan Fungsional.
+        </li>
+        <li>
+          Peraturan BKN Nomor 7 Tahun 2017 tentang Tata Cara Kenaikan Pangkat
+          PNS.
+        </li>
+      </ol>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Sarana, Prasarana, dan Fasilitas
+      </h3>
+      <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-1">
+        <li>Perangkat komputer/laptop.</li>
+        <li>Akses internet stabil.</li>
+        <li>Web Sistem Tata Kelola Kenaikan Pangkat (SITANGKAS).</li>
+        <li>Dokumen digital ASN di database kepegawaian.</li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Kompetensi Pelaksana
+      </h3>
+      <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-1">
+        <li>
+          Memahami regulasi kepegawaian, khususnya proses kenaikan pangkat ASN.
+        </li>
+        <li>Mampu mengoperasikan sistem digital dan aplikasi perkantoran.</li>
+        <li>Teliti, disiplin, dan berintegritas tinggi.</li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Pengawasan Internal
+      </h3>
+      <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-1">
+        <li>
+          Dilaksanakan secara berjenjang oleh Kasubbag Umum dan Kepegawaian.
+        </li>
+        <li>
+          Monitoring dan evaluasi berkala terhadap pelaksanaan proses
+          digitalisasi layanan kenaikan pangkat.
+        </li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Jumlah Pelaksana
+      </h3>
+      <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-1">
+        <li>Kepala Sub Bagian Umum dan Kepegawaian (1 orang).</li>
+        <li>Pengolah Data dan Informasi (1 orang).</li>
+        <li>Pranata Komputer (1 orang).</li>
+        <li>Analis SDM Aparatur Ahli Pertama (1 orang).</li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-[#0C969C] mb-3">
+        Jaminan Pelaksanaan
+      </h3>
+      <ul class="list-disc pl-6 text-gray-700 space-y-1">
+        <li>Layanan dilaksanakan transparan, cepat, dan akuntabel.</li>
+        <li>
+          Penggunaan Web SITANGKAS menjamin kecepatan, kemudahan akses, dan
+          keterbukaan informasi bagi ASN.
+        </li>
+      </ul>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="bg-[#274D60] text-white py-6 text-center text-sm shadow-inner mt-10"
+    >
+      <p class="italic mb-1">
+        "Transparan, Cepat, dan Akuntabel untuk ASN yang Profesional."
+      </p>
+      © <span id="year"></span> SITANGKAS — Dinas Pertanian Kabupaten Sikka
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

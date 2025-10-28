@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tampilan Data Usulan Kenaikan Pangkat — SITANGKAS</title>
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png
+"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f4f8fa;
+      }
+
+      /* Keep footer bottom stable */
+      main {
+        min-height: calc(100vh - 180px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Table Base */
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+      }
+      thead th {
+        white-space: nowrap;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .sticky-header th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      td,
+      th {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e6eff1;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      tbody tr:nth-child(even) td {
+        background: #f7fbfc;
+      }
+      tbody tr:hover td {
+        background: #e6f7f9 !important;
+      }
+
+      /* Freeze Desktop Only */
+      .freeze-col {
+        position: sticky;
+        left: 0;
+        z-index: 12;
+        background: white;
+      }
+      .freeze-col-2 {
+        position: sticky;
+        left: 180px;
+        z-index: 11;
+        background: white;
+      }
+
+      /* Mobile fix */
+      @media (max-width: 768px) {
+        .freeze-col,
+        .freeze-col-2 {
+          position: static !important;
+        }
+        td:nth-child(2),
+        th:nth-child(2),
+        td:nth-child(4),
+        th:nth-child(4),
+        td:nth-child(5),
+        th:nth-child(5) {
+          white-space: normal !important;
+          min-width: 170px;
+        }
+      }
+
+      /* Preview Button */
+      .badge-preview {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 8px;
+        font-size: 11px;
+        background: #0c969c;
+        color: white;
+        border-radius: 6px;
+      }
+
+      /* Skeleton Loader */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #e0e7e9 25%,
+          #f2f6f7 50%,
+          #e0e7e9 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.3s infinite;
+        border-radius: 6px;
+      }
+      @keyframes skeleton-loading {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .skeleton-row td {
+        padding: 12px;
+      }
+
+      /* Fade transition */
+      .fade-out {
+        opacity: 0;
+        transition: 0.6s ease-out;
+      }
+      #tableContainer {
+        opacity: 0;
+        transition: 0.6s ease-in;
+      }
+      #tableContainer.show {
+        opacity: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      // 🔒 Cegah akses login jika sudah login & token masih aktif
+      const token = localStorage.getItem("token");
+      const expiredAt = localStorage.getItem("expiredAt");
+
+      if (token && expiredAt) {
+        const now = new Date();
+        const expiry = new Date(expiredAt);
+
+        if (!isNaN(expiry.getTime()) && expiry.getTime() > now.getTime()) {
+          window.location.replace("dashboard.html");
+        } else {
+          // Token kadaluarsa → hapus semua data login
+          localStorage.clear();
+        }
+      }
+    </script>
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-md fixed w-full z-50 border-b">
+      <div
+        class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+            class="w-10 h-10"
+          />
+          <span class="text-lg font-bold text-[#0A7075]">SITANGKAS</span>
+        </div>
+        <a
+          href="index.html"
+          class="bg-[#0C969C] text-white px-4 py-2 rounded-lg text-sm shadow-sm hover:bg-[#0A7075] transition"
+          >Kembali ke Beranda</a
+        >
+      </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header
+      class="pt-28 pb-10 text-center bg-gradient-to-br from-[#032F30] to-[#0A7075] text-white"
+    >
+      <h2 class="text-2xl font-bold">Data Usulan Kenaikan Pangkat ASN</h2>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 py-10">
+      <div class="bg-white p-4 rounded-2xl shadow-md">
+        <!-- ✅ LOADING -->
+        <div
+          id="loading"
+          class="py-14 flex flex-col items-center gap-4 text-[#0A7075]"
+        >
+          <div class="relative">
+            <img
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+              class="w-14 h-14 animate-spin opacity-90"
+              style="animation-duration: 1.3s"
+            />
+            <div
+              class="absolute inset-0 rounded-full animate-ping border-2 border-[#0A7075] opacity-20"
+            ></div>
+          </div>
+          <div class="font-semibold animate-pulse">Memuat Data SITANGKAS…</div>
+          <p class="text-xs text-gray-500">Mengambil data dari server…</p>
+
+          <!-- Skeleton container -->
+          <div class="table-wrap mt-6 w-full">
+            <table>
+              <tbody id="skeletonBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ✅ REAL TABLE -->
+        <div id="tableContainer" class="table-wrap hidden">
+          <table id="dataTable">
+            <thead
+              id="tableHeader"
+              class="sticky-header bg-gradient-to-r from-[#0A7075] to-[#0C969C] text-white"
+            ></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div
+          class="mt-4 flex justify-between items-center text-sm gap-4 flex-wrap"
+        >
+          <button id="prevPage" class="px-3 py-1 border rounded">‹ Prev</button>
+          <span id="pageInfo"></span>
+          <button id="nextPage" class="px-3 py-1 border rounded">Next ›</button>
+
+          <select id="rowsSelect" class="border rounded px-2 py-1">
+            <option value="10">10 Baris</option>
+            <option value="25">25 Baris</option>
+          </select>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="bg-[#274D60] text-white py-6 text-center text-sm shadow-inner mt-10"
+    >
+      <p class="italic mb-1">
+        "Transparan, Cepat, dan Akuntabel untuk ASN yang Profesional."
+      </p>
+      © <span id="year"></span> SITANGKAS — Dinas Pertanian Kabupaten Sikka
+    </footer>
+
+    <script>
+      const API_URL =
+        "https://script.google.com/macros/s/AKfycbzcSAMXTjXUWR2cSf5SA7RiEP1mT6Sxw2NRv8YcppQ8sHtYm00Uc1IeKvMTYJzZ0gfV/exec";
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      const columns = [
+        "Timestamp",
+        "Nama Lengkap",
+        "NIP",
+        "Unit Kerja / Bidang",
+        "Jabatan Saat Ini",
+        "Jenis Kenaikan Pangkat",
+        "Pangkat, Gol/ Ruang Saat Ini",
+        "Pangkat, Gol / Ruang Yang Diajukan",
+        "Masa Kerja (Tahun/Bulan)",
+        "Nomor HP Aktif",
+        "Email Dinas",
+        "PAK Lama",
+        "PAK Baru",
+        "Fc. SK Pangkat Terakhir",
+        "Fc. SK Pengangkatan Pertama Jabatan Fungsional",
+        "Fc. SK Jabatan Fungsional Terakhir",
+        "Sertifikat Ukom (Bagi kenaikan jabatan)",
+        "FC. SK Mutasi (Jika Berpindah Instansi Atau Jabatan)",
+        "Fc. SKP 2 Tahun Terakhir",
+        "Pernyataan Keaslian Data",
+      ];
+
+      let allData = [],
+        page = 1,
+        limit = 10;
+
+      // Timestamp WITA
+      const dtFormat = new Intl.DateTimeFormat("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Makassar",
+      });
+
+      // ✅ Generate Skeleton Rows
+      function renderSkeleton() {
+        const sk = document.getElementById("skeletonBody");
+        for (let i = 0; i < 6; i++) {
+          let row = "<tr class='skeleton-row'>";
+          for (let j = 0; j < 8; j++) {
+            row += `<td><div class='skeleton h-4 w-24'></div></td>`;
+          }
+          row += "</tr>";
+          sk.insertAdjacentHTML("beforeend", row);
+        }
+      }
+      renderSkeleton();
+
+      // Pagination handlers
+      rowsSelect.onchange = (e) => {
+        limit = parseInt(e.target.value);
+        page = 1;
+        draw();
+      };
+      prevPage.onclick = () => {
+        if (page > 1) {
+          page--;
+          draw();
+        }
+      };
+      nextPage.onclick = () => {
+        if (page < Math.ceil(allData.length / limit)) {
+          page++;
+          draw();
+        }
+      };
+
+      // Load Data
+      fetch(API_URL)
+        .then((r) => r.json())
+        .then((res) => {
+          allData = res;
+          drawHeader();
+          draw();
+          exitLoading();
+        });
+
+      function exitLoading() {
+        const el = document.getElementById("loading");
+        el.classList.add("fade-out");
+        setTimeout(() => el.remove(), 600);
+
+        const tc = document.getElementById("tableContainer");
+        tc.classList.remove("hidden");
+        setTimeout(() => tc.classList.add("show"), 40);
+      }
+
+      function drawHeader() {
+        const tr = document.createElement("tr");
+        columns.forEach((c) => {
+          const th = document.createElement("th");
+          th.textContent = c;
+          if (c === "Nama Lengkap") th.classList.add("freeze-col");
+          if (c === "NIP") th.classList.add("freeze-col-2");
+          tr.appendChild(th);
+        });
+        tableHeader.appendChild(tr);
+      }
+
+      function draw() {
+        tableBody.innerHTML = "";
+        const start = (page - 1) * limit;
+        allData.slice(start, start + limit).forEach((r) => {
+          const tr = document.createElement("tr");
+          columns.forEach((col) => {
+            const td = document.createElement("td");
+            let v = r[col] || "-";
+
+            // Timestamp format
+            if (col === "Timestamp" && v && !isNaN(Date.parse(v))) {
+              v = dtFormat.format(new Date(v)) + " WITA";
+            }
+
+            // Preview buttons for Google Drive files
+            if (/Fc\.|PAK|SK|Sertifikat/i.test(col)) {
+              td.innerHTML =
+                v && v !== "-"
+                  ? `<a class="badge-preview" target="_blank" href="${v}">
+<i class="fa-solid fa-eye"></i>Preview</a>`
+                  : `<span class="text-gray-400 italic">-</span>`;
+            } else td.textContent = v;
+
+            if (col === "Nama Lengkap") td.classList.add("freeze-col");
+            if (col === "NIP") td.classList.add("freeze-col-2");
+
+            tr.appendChild(td);
+          });
+          tableBody.appendChild(tr);
+        });
+        pageInfo.textContent = `Hal ${page} / ${Math.ceil(
+          allData.length / limit
+        )}`;
+      }
+    </script>
+  </body>
+</html>

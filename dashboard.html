@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin | SITANGKAS</title>
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .fade-in {
+        animation: fadeIn 1s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .glow-card {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+      }
+      .glow-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 1rem;
+        background: radial-gradient(
+          circle at center,
+          rgba(108, 188, 204, 0.35),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .glow-card:hover::before {
+        opacity: 1;
+      }
+      .glow-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 0 35px rgba(108, 188, 204, 0.25);
+      }
+    </style>
+  </head>
+
+  <body class="bg-[#F4F8FA] text-gray-800">
+    <script>
+      const token = localStorage.getItem("token");
+      const expiredAt = localStorage.getItem("expiredAt");
+
+      if (!token || !expiredAt) {
+        window.location.replace("login.html");
+      } else {
+        const now = new Date();
+        const expiry = new Date(expiredAt);
+
+        // Jika token expired → bersihkan storage & redirect ke login
+        if (isNaN(expiry.getTime()) || expiry.getTime() <= now.getTime()) {
+          localStorage.clear();
+          window.location.replace("login.html");
+        }
+      }
+    </script>
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed w-full z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-3">
+            <img
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+              alt="Logo SITANGKAS"
+              class="w-10 h-10"
+            />
+            <h1 class="text-lg font-bold text-[#0A7075] tracking-wide">
+              SITANGKAS
+            </h1>
+          </div>
+          <div class="flex items-center gap-4">
+            <p class="hidden sm:block text-sm text-gray-600">
+              Login sebagai:
+              <span id="userName" class="font-semibold text-[#0C969C]"
+                >Administrator</span
+              >
+            </p>
+            <button
+              id="logoutBtn"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header
+      class="bg-gradient-to-br from-[#032F30] to-[#0A7075] text-white text-center py-24 px-6 fade-in pt-32"
+    >
+      <h2 class="text-4xl font-bold mb-3">Dashboard Administrator</h2>
+      <p class="text-white/80 max-w-2xl mx-auto">
+        Kelola data ASN dan pantau proses kenaikan pangkat melalui sistem
+        digital SITANGKAS.
+      </p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto py-16 px-6 fade-in">
+      <a
+        href="https://docs.google.com/spreadsheets/d/10-_fPnzELRNI-qS_Q_EF5UeRrtP6PFIQ1CT5iMExq50/edit?usp=sharing"
+        target="_blank"
+        class="block bg-white p-10 rounded-2xl shadow-md glow-card text-center"
+      >
+        <div
+          class="w-16 h-16 flex items-center justify-center mx-auto bg-[#0C969C]/10 rounded-full mb-5"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-8 h-8 text-[#0C969C]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6M9 8h6M4 6a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold text-[#032F30] mb-2">
+          Kelola Data ASN
+        </h3>
+        <p class="text-gray-600 text-sm max-w-md mx-auto">
+          Klik untuk membuka lembar kerja Google Spreadsheet berisi data ASN
+          aktif di lingkungan Dinas Pertanian Kabupaten Sikka.
+        </p>
+      </a>
+
+      <div class="bg-white p-6 rounded-xl shadow mt-12">
+        <h4
+          class="text-lg font-semibold text-[#0A7075] mb-3 flex items-center gap-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6"
+            aria-hidden="true"
+            role="img"
+          >
+            <path d="M2 10h4l9-5v14l-9-5H2a2 2 0 01-2-2v-2a2 2 0 012-2z" />
+            <path
+              d="M21 7l-3 3 3 3"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Pengumuman
+        </h4>
+
+        <ul class="list-disc pl-6 text-gray-700 text-sm space-y-2">
+          <li>Pembaruan data ASN dilakukan setiap hari Senin.</li>
+          <li>
+            Pastikan seluruh berkas kenaikan pangkat telah diverifikasi sebelum
+            akhir bulan.
+          </li>
+          <li>
+            Maintenance sistem dijadwalkan pada <b>2 November 2025</b> pukul
+            20.00 WITA.
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <footer
+      class="bg-[#274D60] text-white py-6 text-center text-sm shadow-inner mt-10"
+    >
+      <p class="italic mb-1">
+        "Transparan, Cepat, dan Akuntabel untuk ASN yang Profesional."
+      </p>
+      © <span id="year"></span> SITANGKAS — Dinas Pertanian Kabupaten Sikka
+    </footer>
+
+    <!-- Script -->
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      const username = localStorage.getItem("username");
+      if (username) document.getElementById("userName").textContent = username;
+
+      // ✅ Toast seperti di login.html
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+        background: "white",
+        color: "#333",
+        width: "360px",
+        padding: "0.5rem 1rem",
+        iconColor: "#3085d6",
+        customClass: {
+          popup: "rounded-lg shadow-lg font-medium text-sm",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+
+      function showToast(type, message) {
+        let iconSVG = "";
+        switch (type) {
+          case "success":
+            iconSVG = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
+            break;
+          case "error":
+            iconSVG = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+            break;
+          case "warning":
+            iconSVG = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86l-6.93-12z"></path></svg>`;
+            break;
+        }
+
+        Toast.fire({
+          html: `
+            <div style="display:flex;align-items:center;gap:8px;">
+              ${iconSVG}
+              <span>${message}</span>
+            </div>`,
+        });
+      }
+
+      // 🔹 Tombol logout
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        Swal.fire({
+          title: "Yakin ingin keluar?",
+          text: "Sesi Anda akan diakhiri.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Ya, keluar",
+          cancelButtonText: "Batal",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.clear();
+            showToast(
+              "success",
+              "Logout berhasil, Anda telah keluar dari sistem."
+            );
+            setTimeout(() => {
+              window.location.replace("login.html");
+            }, 1500);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
