@@ -3,65 +3,148 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SITANGKAS — Sistem Informasi Kenaikan Pangkat ASN</title>
+    <title>SI-TANGKAS — Sistem Informasi Kenaikan Pangkat ASN</title>
     <link
       rel="icon"
-      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png
-"
+      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/ec06e4f627f98e12b5d769445e27d9a16d1262c1/logo.png"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
       body {
         font-family: "Inter", sans-serif;
       }
-      .fade-in {
-        animation: fadeIn 1.2s ease-out;
+
+      :root {
+        --brand-900: #032f30;
+        --brand-800: #0a7075;
+        --brand-700: #0c969c;
+        --accent: #6ba3be;
       }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+
+      .card {
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(9, 30, 33, 0.06);
+      }
+
+      .section-rule {
+        height: 4px;
+        width: 96px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--accent), var(--brand-700));
+      }
+
+      .nav-active {
+        color: var(--brand-700) !important;
+        font-weight: 700;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 520ms cubic-bezier(0.2, 0.9, 0.3, 1),
+          transform 520ms cubic-bezier(0.2, 0.9, 0.3, 1);
+      }
+      .reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* === Hamburger 3D Flip — Versi Presisi X === */
+      .hamburger3d {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        perspective: 600px;
+      }
+
+      .hamburger3d svg {
+        width: 32px;
+        height: 32px;
+        transform-style: preserve-3d;
+        transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+      }
+
+      .hamburger3d line {
+        fill: none;
+        stroke: var(--brand-800);
+        stroke-width: 4.5;
+        stroke-linecap: round;
+        transform-origin: 50% 50%;
+        transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1),
+          stroke 0.3s ease, opacity 0.3s ease;
+      }
+
+      /* posisi awal */
+      .hamburger3d .top {
+        transform: translateY(-10px);
+      }
+      .hamburger3d .middle {
+        transform: translateY(0);
+      }
+      .hamburger3d .bottom {
+        transform: translateY(10px);
+      }
+
+      /* efek hover */
+      .hamburger3d:hover line {
+        filter: drop-shadow(0 0 3px var(--brand-700));
+      }
+
+      /* aktif → bentuk X sejajar */
+      .hamburger3d.active svg {
+        transform: rotateY(180deg);
+      }
+
+      .hamburger3d.active .top {
+        transform: translateY(0) rotate(45deg);
+        stroke: var(--accent);
+      }
+
+      .hamburger3d.active .middle {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+
+      .hamburger3d.active .bottom {
+        transform: translateY(0) rotate(-45deg);
+        stroke: var(--accent);
+      }
+
+      /* === Mobile Menu transition + blur === */
+      #mobileMenu {
+        transition: all 0.32s cubic-bezier(0.2, 0.9, 0.2, 1);
+        background-color: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(8px);
+      }
+      #mobileMenu.hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+      }
+      #mobileMenu.show {
+        opacity: 1;
+        transform: translateY(0);
       }
     </style>
   </head>
 
   <body class="bg-[#F4F8FA] text-gray-800">
-    <script>
-      // 🔒 Cegah akses login jika sudah login & token masih aktif
-      const token = localStorage.getItem("token");
-      const expiredAt = localStorage.getItem("expiredAt");
-
-      if (token && expiredAt) {
-        const now = new Date();
-        const expiry = new Date(expiredAt);
-
-        if (!isNaN(expiry.getTime()) && expiry.getTime() > now.getTime()) {
-          window.location.replace("dashboard.html");
-        } else {
-          // Token kadaluarsa → hapus semua data login
-          localStorage.clear();
-        }
-      }
-    </script>
-
     <!-- Navbar -->
     <nav class="bg-white shadow-md fixed w-full z-50 border-b border-gray-100">
       <div class="max-w-7xl mx-auto px-6 lg:px-10">
         <div class="flex justify-between items-center h-16">
-          <!-- Logo -->
           <div class="flex items-center space-x-3">
             <img
-              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/ec06e4f627f98e12b5d769445e27d9a16d1262c1/logo.png"
               alt="Logo SITANGKAS"
               class="w-12 h-12 object-contain"
             />
             <h1 class="text-xl font-bold text-[#0A7075] tracking-wide">
-              SITANGKAS
+              SI-TANGKAS
             </h1>
           </div>
 
@@ -71,25 +154,27 @@
           >
             <a
               href="#tentang"
-              class="text-gray-700 hover:text-[#0C969C] transition"
+              class="text-gray-700 hover:text-[#0C969C] transition navmenu"
               >Tentang</a
             >
             <a
               href="#fitur"
-              class="text-gray-700 hover:text-[#0C969C] transition"
+              class="text-gray-700 hover:text-[#0C969C] transition navmenu"
               >Fitur</a
             >
-            <a href="#sop" class="text-gray-700 hover:text-[#0C969C] transition"
+            <a
+              href="#sop"
+              class="text-gray-700 hover:text-[#0C969C] transition navmenu"
               >SOP</a
             >
             <a
               href="#data"
-              class="text-gray-700 hover:text-[#0C969C] transition"
+              class="text-gray-700 hover:text-[#0C969C] transition navmenu"
               >Data</a
             >
             <a
               href="#kontak"
-              class="text-gray-700 hover:text-[#0C969C] transition"
+              class="text-gray-700 hover:text-[#0C969C] transition navmenu"
               >Kontak</a
             >
             <a
@@ -99,24 +184,16 @@
             >
           </div>
 
-          <!-- Hamburger (Mobile) -->
+          <!-- Hamburger 3D -->
           <button
             id="menuBtn"
-            class="md:hidden text-gray-700 focus:outline-none"
+            class="hamburger3d md:hidden"
+            aria-label="Toggle menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-7 h-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+            <svg viewBox="0 0 100 80" width="32" height="32">
+              <line class="top" x1="10" y1="40" x2="90" y2="40" />
+              <line class="middle" x1="10" y1="40" x2="90" y2="40" />
+              <line class="bottom" x1="10" y1="40" x2="90" y2="40" />
             </svg>
           </button>
         </div>
@@ -129,19 +206,27 @@
       >
         <a
           href="#tentang"
-          class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-50 navmenu-m"
           >Tentang</a
         >
-        <a href="#fitur" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+        <a
+          href="#fitur"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-50 navmenu-m"
           >Fitur</a
         >
-        <a href="#sop" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+        <a
+          href="#sop"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-50 navmenu-m"
           >SOP</a
         >
-        <a href="#data" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+        <a
+          href="#data"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-50 navmenu-m"
           >Data</a
         >
-        <a href="#kontak" class="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+        <a
+          href="#kontak"
+          class="block px-4 py-2 text-gray-700 hover:bg-gray-50 navmenu-m"
           >Kontak</a
         >
         <a
@@ -152,114 +237,173 @@
       </div>
     </nav>
 
-    <!-- Hero Section: Dokumen Profesional (CTA Fokus) -->
+    <!-- === Hero Section === -->
     <section
       class="relative bg-gradient-to-br from-[#032F30] to-[#0A7075] text-white pt-32 pb-24 px-6 lg:px-20 overflow-hidden"
     >
-      <div
-        class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center fade-in"
-      >
-        <!-- Kiri: Konten -->
-        <div class="z-10">
-          <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2
+            class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight hero-title"
+          >
             Sistem Tata Kelola Kenaikan Pangkat ASN
           </h2>
-          <p class="text-white/90 text-lg mb-10 leading-relaxed max-w-md">
-            Kelola dan verifikasi berkas kenaikan pangkat ASN dengan lebih
-            efisien, cepat, dan transparan melalui sistem digital SITANGKAS.
+          <p
+            class="text-white/90 text-lg mb-8 leading-relaxed hero-sub max-w-lg"
+          >
+            Mempercepat proses pengajuan, verifikasi, dan pelacakan kenaikan
+            pangkat ASN dengan alur yang transparan, akuntabel, dan
+            terdokumentasi rapi.
           </p>
-
-          <!-- CTA utama -->
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSf000R_PXhrAiEa5knQ_O-qNAQAFleKWRXhryS2YxySK1XH9w/viewform"
             target="_blank"
-            class="group relative inline-flex items-center gap-3 bg-[#6BA3BE] text-[#032F30] font-semibold px-10 py-4 rounded-xl shadow-xl hover:bg-[#0C969C] hover:text-white transition-all duration-300"
+            class="inline-flex items-center gap-3 bg-[#6BA3BE] text-[#032F30] font-semibold px-8 py-4 rounded-xl shadow-2xl hover:bg-[#0C969C] hover:text-white transition-all duration-300"
           >
-            <!-- Efek glow -->
-            <span
-              class="absolute inset-0 rounded-xl bg-[#6BA3BE]/40 blur-md opacity-0 group-hover:opacity-100 transition-opacity"
-            ></span>
-
-            <!-- Ikon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6 relative z-10"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 16h8M8 12h8m-8-4h8M4 6h16v12H4z"
-              />
-            </svg>
-
-            <!-- Teks -->
-            <span class="relative z-10 tracking-wide"
-              >Isi Formulir Pengajuan</span
-            >
+            Isi Formulir Pengajuan
           </a>
-
-          <!-- Garis aksen -->
-          <div class="h-1 w-32 bg-[#6BA3BE] mt-10 rounded-full"></div>
         </div>
-
-        <!-- Kanan: Ilustrasi -->
-        <div class="flex justify-center md:justify-end relative">
-          <div class="relative w-80 md:w-[420px]">
-            <div
-              class="absolute -inset-4 bg-[#0C969C]/30 rounded-3xl blur-xl animate-pulse"
-            ></div>
-            <img
-              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/ilustrasi.png
-"
-              alt="Ilustrasi Dokumen Digital"
-              class="relative w-full drop-shadow-2xl rounded-2xl hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+        <div class="flex justify-center md:justify-end reveal">
+          <img
+            src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/ilustrasi.png"
+            alt="Ilustrasi Dokumen"
+            class="w-80 md:w-[440px] drop-shadow-2xl rounded-2xl hover:scale-105 transition-transform duration-500"
+          />
         </div>
       </div>
-
-      <!-- Pola dekoratif halus -->
-      <div
-        class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pw-maze-white.png')] opacity-10"
-      ></div>
-
-      <!-- Cahaya dekoratif -->
-      <div
-        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#0C969C]/40 rounded-full blur-[100px]"
-      ></div>
     </section>
 
+    <!-- === Konten Lain (Tentang, Fitur, SOP, Data, Kontak, Footer) === -->
+    <!-- (tidak dihapus; tetap sama seperti versi sebelumnya kamu punya) -->
     <!-- Tentang -->
     <section
       id="tentang"
       class="py-20 px-6 lg:px-20 bg-white border-b border-gray-100"
     >
       <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-        <div>
+        <div class="reveal">
           <h3 class="text-2xl font-bold text-[#0A7075] mb-4">
-            Tentang SITANGKAS
+            Tentang SI-TANGKAS
           </h3>
           <p class="text-gray-700 leading-relaxed">
-            SITANGKAS adalah sistem informasi internal untuk memeriksa dan
-            mengelola kelengkapan berkas kenaikan pangkat ASN. Sistem ini
-            dirancang untuk memastikan proses lebih cepat, akurat, dan
-            terdokumentasi dengan baik.
+            Portal SI-TANGKAS (Sistem Tata kelola Kenaikan Pangkat ASN Cepat Dan
+            Akurat) merupakan inovasi dari Sub Bagian Umum dan Kepegawaian Dinas
+            Pertanian Kabupaten Sikka untuk mendigitalisasi dan mempercepat
+            proses kenaikan pangkat ASN secara aman dan terukur.
           </p>
+
+          <div class="mt-6 grid sm:grid-cols-2 gap-4">
+            <div class="bg-white p-6 card border border-gray-50">
+              <h4 class="font-semibold text-[var(--brand-700)] mb-2">
+                Tujuan Utama
+              </h4>
+              <ul class="text-gray-600 mt-2 text-sm list-disc list-inside">
+                <li>Mempermudah pengajuan kenaikan pangkat</li>
+                <li>Mempercepat proses verifikasi</li>
+                <li>Meningkatkan transparansi data</li>
+              </ul>
+            </div>
+
+            <div class="bg-white p-6 card border border-gray-50">
+              <h4 class="font-semibold text-[var(--brand-700)] mb-2">
+                Manfaat
+              </h4>
+              <ul class="text-gray-600 mt-2 text-sm list-disc list-inside">
+                <li>Pengajuan online 24/7</li>
+                <li>Audit trail & histori usulan</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="flex justify-center">
+
+        <div class="reveal">
           <div
-            class="bg-[#F4F8FA] rounded-xl p-6 shadow-md border border-gray-100"
+            class="bg-[var(--brand-900)]/5 rounded-2xl p-8 card border border-gray-100"
           >
-            <h4 class="font-semibold text-[#0C969C] mb-2">Tujuan Utama:</h4>
-            <ul class="list-disc pl-6 text-gray-700 text-sm leading-relaxed">
-              <li>Mempercepat proses pengajuan kenaikan pangkat ASN</li>
-              <li>Meningkatkan transparansi verifikasi berkas</li>
-              <li>Mempermudah koordinasi antar unit terkait</li>
-            </ul>
+            <h4 class="text-lg font-semibold text-[var(--brand-800)]">
+              Ringkasan Alur
+            </h4>
+            <p class="text-gray-600 mt-3 text-sm leading-relaxed max-w-md">
+              Ajukan → Verifikasi → Lengkapi bila perlu → Validasi → Pengantar
+              Dinas → Proses Lanjut BKPSDM
+            </p>
+
+            <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+              <!-- Lengkap -->
+              <div class="group">
+                <div class="flex justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-7 h-7 text-[var(--brand-700)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div class="text-xs text-gray-600 mt-2 font-medium">
+                  Lengkap
+                </div>
+              </div>
+
+              <!-- Terpantau -->
+              <div class="group">
+                <div class="flex justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-7 h-7 text-[var(--brand-700)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div class="text-xs text-gray-600 mt-2 font-medium">
+                  Terpantau
+                </div>
+              </div>
+
+              <!-- Akurat -->
+              <div class="group">
+                <div class="flex justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-7 h-7 text-[var(--brand-700)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 11c1.38 0 2.5-1.12 2.5-2.5S13.38 6 12 6s-2.5 1.12-2.5 2.5S10.62 11 12 11zm0 1c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zM5 7V5a2 2 0 012-2h10a2 2 0 012 2v2"
+                    />
+                  </svg>
+                </div>
+                <div class="text-xs text-gray-600 mt-2 font-medium">Akurat</div>
+              </div>
+            </div>
+
+            <style>
+              @media (prefers-color-scheme: dark) {
+                .text-gray-600 {
+                  color: #cbd5d6 !important;
+                }
+              }
+            </style>
           </div>
         </div>
       </div>
@@ -270,14 +414,16 @@
       <h3 class="text-2xl font-bold text-center text-[#0A7075] mb-12">
         Fitur Utama
       </h3>
-      <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
-        <div class="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+
+      <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-4 lg:px-0">
+        <div
+          class="bg-white p-8 rounded-2xl card border border-gray-100 reveal"
+        >
           <div
-            class="w-12 h-12 flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-4"
+            class="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--brand-700)]/10 mb-4"
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-7 h-7 text-[#0C969C]"
+              class="w-6 h-6 text-[var(--brand-700)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -290,22 +436,23 @@
               />
             </svg>
           </div>
-          <h4 class="text-lg font-semibold mb-2 text-[#032F30]">
-            Verifikasi Otomatis
+          <h4 class="font-semibold text-[var(--brand-900)]">
+            Kelengkapan Berkas
           </h4>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Sistem secara otomatis memeriksa kelengkapan dokumen pengajuan ASN
-            agar lebih efisien dan akurat.
+          <p class="text-gray-600 mt-2 text-sm">
+            Setiap dokumen diperiksa sesuai tahapan prosedur sehingga
+            meminimalisir penolakan.
           </p>
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+        <div
+          class="bg-white p-8 rounded-2xl card border border-gray-100 reveal"
+        >
           <div
-            class="w-12 h-12 flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-4"
+            class="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--brand-700)]/10 mb-4"
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-7 h-7 text-[#0C969C]"
+              class="w-6 h-6 text-[var(--brand-700)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -318,22 +465,20 @@
               />
             </svg>
           </div>
-          <h4 class="text-lg font-semibold mb-2 text-[#032F30]">
-            Tampilan Responsif
-          </h4>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Dapat diakses dari perangkat apa pun dengan antarmuka yang tetap
-            elegan dan proporsional.
+          <h4 class="font-semibold text-[var(--brand-900)]">Responsif</h4>
+          <p class="text-gray-600 mt-2 text-sm">
+            Antarmuka yang dapat diakses dari desktop maupun perangkat mobile.
           </p>
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+        <div
+          class="bg-white p-8 rounded-2xl card border border-gray-100 reveal"
+        >
           <div
-            class="w-12 h-12 flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-4"
+            class="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--brand-700)]/10 mb-4"
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-7 h-7 text-[#0C969C]"
+              class="w-6 h-6 text-[var(--brand-700)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -346,107 +491,596 @@
               />
             </svg>
           </div>
-          <h4 class="text-lg font-semibold mb-2 text-[#032F30]">
-            Proses Cepat
+          <h4 class="font-semibold text-[var(--brand-900)]">
+            Proses Terpantau
           </h4>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Proses pengajuan dan verifikasi lebih cepat dengan sistem
-            terintegrasi dan manajemen data otomatis.
+          <p class="text-gray-600 mt-2 text-sm">
+            Status usulan dapat dipantau oleh ASN dan admin kapan saja.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- SOP Section -->
-    <section
-      id="sop"
-      class="py-20 px-6 lg:px-20 bg-white border-t border-gray-100"
-    >
-      <h3 class="text-2xl font-bold text-center text-[#0A7075] mb-12">
-        Standar Operasional Prosedur (SOP)
-      </h3>
+    <!-- SOP -->
+    <section id="sop" class="py-20 px-6 lg:px-20 bg-white">
+      <div
+        style="
+          --brand-900: #032f30;
+          --brand-800: #0a7075;
+          --brand-700: #0c969c;
+          --accent: #6ba3be;
+          font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+            'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 24px;
+        "
+      >
+        <style>
+          .tl-wrap {
+            position: relative;
+            padding-left: 28px;
+          }
 
-      <div class="max-w-3xl mx-auto">
+          /* ✨ Garis utama + efek pulse */
+          .tl-line {
+            position: absolute;
+            left: 8px;
+            top: 12px;
+            bottom: 12px;
+            width: 4px;
+            border-radius: 4px;
+            background: linear-gradient(
+              180deg,
+              var(--brand-700),
+              var(--accent)
+            );
+            box-shadow: 0 0 8px rgba(12, 150, 156, 0.4);
+            animation: pulseGlow 2.5s infinite alternate ease-in-out;
+          }
+          @keyframes pulseGlow {
+            0% {
+              box-shadow: 0 0 6px rgba(12, 150, 156, 0.3);
+            }
+            100% {
+              box-shadow: 0 0 16px rgba(12, 150, 156, 0.7);
+            }
+          }
+
+          .tl-step {
+            position: relative;
+            padding: 18px 18px 22px 56px;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+          }
+
+          .tl-step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          .tl-dot {
+            position: absolute;
+            left: -5px;
+            top: 22px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid var(--brand-700);
+            box-shadow: 0 3px 8px rgba(9, 30, 33, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .tl-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px 16px;
+            box-shadow: 0 8px 28px rgba(9, 30, 33, 0.06);
+            border: 1px solid rgba(6, 40, 40, 0.04);
+            flex: 1;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1),
+              opacity 0.6s;
+          }
+
+          /* ✨ Delay berurutan */
+          .tl-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+          }
+
+          .tl-card[data-delay="1"] {
+            transition-delay: 0.1s;
+          }
+          .tl-card[data-delay="2"] {
+            transition-delay: 0.25s;
+          }
+          .tl-card[data-delay="3"] {
+            transition-delay: 0.4s;
+          }
+          .tl-card[data-delay="4"] {
+            transition-delay: 0.55s;
+          }
+          .tl-card[data-delay="5"] {
+            transition-delay: 0.7s;
+          }
+          .tl-card[data-delay="6"] {
+            transition-delay: 0.85s;
+          }
+
+          .tl-head {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+          }
+
+          .tl-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(
+              180deg,
+              var(--brand-700),
+              var(--accent)
+            );
+            color: white;
+            box-shadow: 0 6px 18px rgba(9, 30, 33, 0.08);
+            flex: 0 0 40px;
+            transition: all 0.4s ease;
+          }
+
+          /* ✨ Animasi Hover Ikon */
+          .tl-card:hover .tl-icon {
+            transform: rotate(10deg) scale(1.05);
+            box-shadow: 0 0 18px rgba(12, 150, 156, 0.6);
+          }
+
+          .tl-title {
+            font-weight: 700;
+            color: var(--brand-900);
+            font-size: 1rem;
+          }
+
+          .tl-desc {
+            margin-top: 8px;
+            color: #475467;
+            font-size: 0.95rem;
+            line-height: 1.45;
+          }
+
+          .tl-meta {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #64748b;
+          }
+
+          @media (max-width: 640px) {
+            .tl-step {
+              padding-left: 46px;
+              padding-right: 8px;
+            }
+            .tl-card {
+              padding: 12px;
+            }
+            .tl-head .tl-title {
+              font-size: 0.98rem;
+            }
+          }
+        </style>
+
+        <!-- Header -->
         <div
-          class="bg-[#F9FAFB] p-10 rounded-2xl shadow hover:shadow-lg transition text-center"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+          "
         >
-          <div
-            class="w-14 h-14 mx-auto flex items-center justify-center bg-[#0C969C]/10 rounded-full mb-6"
-          >
-            <!-- 🔄 Ganti ikon download jadi ikon dokumen -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-8 h-8 text-[#0C969C]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <div>
+            <h3
+              style="
+                margin: 0;
+                font-size: 1.125rem;
+                color: var(--brand-800);
+                font-weight: 700;
+              "
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6M9 8h6M4 6a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
-              />
-            </svg>
+              Alur SOP — Kenaikan Pangkat ASN
+            </h3>
+            <p style="margin: 6px 0 0; color: #475467; font-size: 0.95rem">
+              Ringkasan langkah resmi — dari pengajuan digital hingga pengiriman
+              berkas fisik.
+            </p>
+          </div>
+          <div style="min-width: 120px; text-align: right">
+            <div style="font-size: 0.85rem; color: #64748b">Status</div>
+            <div style="font-weight: 700; color: var(--brand-700)">
+              Tersusun & Terintegrasi
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="tl-wrap">
+          <div class="tl-line"></div>
+
+          <!-- STEP 1 -->
+          <div class="tl-step">
+            <div class="tl-dot"></div>
+            <div class="tl-card" data-step data-delay="1">
+              <div class="tl-head">
+                <div class="tl-icon">
+                  <!-- Upload Icon -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5 5 5M12 5v12"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="tl-title">Pengajuan Berkas oleh ASN</div>
+                  <div class="tl-meta">
+                    ASN mengunggah seluruh persyaratan ke SI-TANGKAS
+                  </div>
+                </div>
+              </div>
+              <div class="tl-desc">
+                ASN memastikan semua dokumen (surat pengantar, SK, dan berkas
+                pendukung) terunggah lengkap ke sistem SI-TANGKAS.
+              </div>
+            </div>
           </div>
 
-          <h4 class="text-xl font-semibold text-[#032F30] mb-3">
-            SOP Pengusulan Kenaikan Pangkat ASN
-          </h4>
-          <p class="text-gray-600 mb-8 leading-relaxed max-w-md mx-auto">
-            Panduan resmi Dinas Pertanian Kabupaten Sikka tentang alur dan
-            tahapan pengusulan kenaikan pangkat ASN secara digital melalui
-            sistem SITANGKAS.
-          </p>
+          <!-- STEP 2 -->
+          <div class="tl-step">
+            <div class="tl-dot"></div>
+            <div class="tl-card" data-step data-delay="2">
+              <div class="tl-head">
+                <div class="tl-icon">
+                  <!-- Check Circle -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="tl-title">Verifikasi oleh Staf Subbag</div>
+                  <div class="tl-meta">Pemeriksaan kelengkapan & keabsahan</div>
+                </div>
+              </div>
+              <div class="tl-desc">
+                Staf memeriksa keabsahan dokumen digital; jika ada kekurangan,
+                sistem mengirim notifikasi otomatis kepada ASN untuk perbaikan.
+              </div>
+            </div>
+          </div>
 
-          <a
-            href="sop.html"
-            class="group inline-flex items-center gap-3 bg-[#0C969C] text-white font-medium px-8 py-3 rounded-xl shadow hover:bg-[#0A7075] transition-all duration-300"
-          >
-            <!-- 📘 Ikon dokumen kecil di tombol -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6M9 8h6M4 6a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
-              />
-            </svg>
-            <span>Lihat SOP Lengkap</span>
-          </a>
+          <!-- STEP 3 -->
+          <div class="tl-step">
+            <div class="tl-dot"></div>
+            <div class="tl-card" data-step data-delay="3">
+              <div class="tl-head">
+                <div class="tl-icon">
+                  <!-- Clipboard checklist -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 2h6a2 2 0 0 1 2 2v2"
+                    />
+                    <rect
+                      x="5"
+                      y="6"
+                      width="14"
+                      height="14"
+                      rx="2"
+                      ry="2"
+                      stroke-width="2"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 11h6M9 15h3"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="tl-title">Keputusan Verifikasi</div>
+                  <div class="tl-meta">
+                    Lengkap → Usulan; Tidak lengkap → Notifikasi
+                  </div>
+                </div>
+              </div>
+              <div class="tl-desc">
+                Jika berkas lengkap, staf menyiapkan usulan kenaikan pangkat
+                dengan pengantar Kepala OPD. Jika tidak, ASN diberi notifikasi
+                perbaikan.
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="tl-step">
+            <div class="tl-dot"></div>
+            <div class="tl-card" data-step data-delay="4">
+              <div class="tl-head">
+                <div class="tl-icon">
+                  <!-- Stamp -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 2v4"
+                    />
+                    <circle cx="12" cy="11" r="6" stroke-width="2" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.5 11.5l1 1 3-3"
+                    />
+                    <rect
+                      x="8"
+                      y="17"
+                      width="8"
+                      height="3"
+                      rx="1"
+                      ry="1"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="tl-title">Pemeriksaan Akhir (Kasubbag)</div>
+                  <div class="tl-meta">Validasi akhir sebelum pengantar</div>
+                </div>
+              </div>
+              <div class="tl-desc">
+                Kasubbag melakukan pemeriksaan akhir untuk memastikan kesesuaian
+                seluruh berkas dan memberi validasi sebelum diteruskan ke Kepala
+                Dinas.
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div class="tl-step">
+            <div class="tl-dot"></div>
+            <div class="tl-card" data-step data-delay="5">
+              <div class="tl-head">
+                <div class="tl-icon">
+                  <!-- Letter -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="tl-title">Penyusunan Surat Pengantar</div>
+                  <div class="tl-meta">Surat oleh Kepala Dinas → BKPSDM</div>
+                </div>
+              </div>
+              <div class="tl-desc">
+                Staf menyusun Surat Pengantar dari Kepala Dinas Pertanian kepada
+                Kepala BKPSDM Kabupaten Sikka untuk proses kenaikan pangkat.
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 6 -->
+          <div class="tl-step">
+            <div class="tl-dot"></div>
+            <div class="tl-card" data-step data-delay="6">
+              <div class="tl-head">
+                <div class="tl-icon">
+                  <!-- Box -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 16V8a2 2 0 0 0-1-1.73L13 3a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73L11 21a2 2 0 0 0 2 0l7-3.27A2 2 0 0 0 21 16z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3.27 6.96L12 11l8.73-4.04M12 11v10"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="tl-title">Pengiriman Berkas Fisik</div>
+                  <div class="tl-meta">
+                    Berkas dikirim ke BKPSDM untuk proses akhir
+                  </div>
+                </div>
+              </div>
+              <div class="tl-desc">
+                Setelah surat pengantar selesai, berkas fisik diserahkan ke
+                BKPSDM Kabupaten Sikka untuk proses administrasi akhir.
+              </div>
+            </div>
+          </div>
         </div>
+
+        <script>
+          (function () {
+            const cards = Array.from(document.querySelectorAll("[data-step]"));
+            const onScroll = () => {
+              cards.forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100)
+                  el.classList.add("visible");
+              });
+            };
+            window.addEventListener("scroll", onScroll);
+            onScroll();
+          })();
+        </script>
       </div>
+
+      <div style="text-align: center; margin-top: 26px">
+        <a
+          href="sop.html"
+          aria-label="Lihat SOP Detail"
+          class="btn-sop group inline-flex items-center gap-3 bg-[var(--brand-900)] text-white px-5 py-3 rounded-lg hover:bg-[var(--brand-700)] hover:scale-105 transition-all duration-300"
+        >
+          <!-- Outline Book Icon -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="icon-book w-5 h-5 group-hover:animate-pulse transition-transform duration-300"
+          >
+            <path
+              d="M2 7.5C2 6.6716 2.6716 6 3.5 6H9a2 2 0 0 1 2 2v9a1 1 0 0 1-1 1H3.5A1.5 1.5 0 0 1 2 16.5v-9z"
+            />
+            <path
+              d="M22 7.5C22 6.6716 21.3284 6 20.5 6H15a2 2 0 0 0-2 2v9a1 1 0 0 0 1 1h6.5A1.5 1.5 0 0 0 22 16.5v-9z"
+            />
+          </svg>
+          <span class="font-semibold">Lihat SOP Detail</span>
+        </a>
+      </div>
+
+      <style>
+        /* Warna tombol dan efek interaktif */
+        .btn-sop {
+          box-shadow: 0 6px 18px rgba(2, 48, 48, 0.12);
+        }
+
+        .btn-sop:hover {
+          box-shadow: 0 10px 26px rgba(2, 48, 48, 0.25);
+        }
+
+        .btn-sop:active {
+          transform: scale(0.97);
+          box-shadow: 0 4px 10px rgba(2, 48, 48, 0.2);
+        }
+
+        .icon-book {
+          transition: transform 0.4s ease;
+        }
+
+        .btn-sop:hover .icon-book {
+          transform: rotate(-8deg) scale(1.1);
+        }
+
+        /* Mode Gelap */
+        @media (prefers-color-scheme: dark) {
+          .btn-sop {
+            background: var(--brand-700);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+          }
+
+          .btn-sop:hover {
+            background: var(--brand-600);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+          }
+        }
+
+        /* Tambahkan fallback warna variabel jika belum ada */
+        :root {
+          --brand-600: #0b8284;
+          --brand-700: #0a7075;
+          --brand-800: #07585a;
+          --brand-900: #054344;
+        }
+      </style>
     </section>
 
-    <!-- ✅ Section Baru: Style SOP + SVG Icons -->
-    <section id="data" class="py-16 mt-14">
-      <div class="max-w-5xl mx-auto text-center">
+    <!-- Data -->
+    <section id="data" class="py-16 mt-12">
+      <div class="max-w-5xl mx-auto text-center reveal">
         <h2 class="text-2xl font-bold text-[#0A7075] mb-2">
           Data Usulan Kenaikan Pangkat ASN
         </h2>
         <p class="text-gray-600 mb-8">
-          Lihat dan pantau seluruh pengajuan kenaikan pangkat yang telah dikirim
-          melalui SITANGKAS
+          Lihat dan pantau seluruh usulan yang telah dikirim
         </p>
 
-        <!-- Card Style ala SOP -->
         <div
-          class="bg-white shadow-xl border border-gray-100 rounded-2xl p-8 mx-4"
+          class="bg-white shadow-xl border border-gray-100 rounded-2xl p-8 mx-4 inline-block"
         >
-          <div class="flex flex-col items-center gap-4 text-center">
-            <!-- ✅ Icon Tabel (SVG) -->
+          <div class="flex items-center gap-4">
             <div
-              class="w-16 h-16 bg-[#0A7075] bg-opacity-10 text-[#0A7075] flex justify-center items-center rounded-xl p-2"
+              class="w-16 h-16 bg-[var(--brand-800)]/10 text-[var(--brand-800)] rounded-xl flex justify-center items-center"
             >
               <svg
-                width="36"
-                height="36"
+                width="28"
+                height="28"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -455,56 +1089,162 @@
                 />
               </svg>
             </div>
-
-            <p class="text-gray-700 text-sm md:text-base max-w-lg">
-              Data berikut merupakan hasil input langsung oleh ASN melalui
-              sistem SITANGKAS.
-            </p>
-
-            <!-- ✅ Tombol dengan SVG mata -->
-            <a
-              href="tampilData.html"
-              class="bg-[#0A7075] text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-[#0C969C] transition inline-flex items-center gap-3"
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="currentColor"
-                viewBox="0 0 576 512"
+            <div class="text-left">
+              <p class="text-gray-700 text-sm">
+                Data ini merupakan hasil input langsung oleh ASN.
+              </p>
+              <a
+                href="tampilData.html"
+                class="mt-3 inline-flex items-center gap-2 bg-[var(--brand-900)] text-white px-4 py-2 rounded-lg hover:bg-[var(--brand-700)] transition"
               >
-                <path
-                  d="M572.52 241.4c1.87 2.84 3.48 5.84 4.73 9-.24.6-.47 1.21-.8 1.79 
-                     C518.87 343.45 407.81 416 288 416S57.13 343.45.55 252.22c-.33-.58-.56-1.19-.8-1.79 
-                     1.26-3.17 2.87-6.17 4.73-9C57.13 168.55 168.19 96 288 96s230.87 72.55 284.52 145.4zM288 368
-                     a112 112 0 100-224 112 112 0 000 224zm0-176a64 64 0 110 128 64 64 0 010-128z"
-                />
-              </svg>
-              Lihat Data Usulan
-            </a>
+                Lihat Data Usulan
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Kontak -->
-    <section
-      id="kontak"
-      class="bg-white py-16 px-6 lg:px-20 text-center md:text-left"
-    >
-      <h3 class="text-2xl font-bold text-[#0A7075] mb-4">Kontak</h3>
-      <p class="text-gray-700">
-        Hubungi tim administrator untuk bantuan atau pertanyaan lebih lanjut
-        mengenai SITANGKAS.
-      </p>
-      <p class="text-gray-600 mt-2">
-        Email:
-        <a
-          href="mailto:sitangkas@instansi.go.id"
-          class="text-[#0C969C] hover:underline"
-        >
-          sitangkas@instansi.go.id
-        </a>
-      </p>
+    <section id="kontak" class="bg-white py-16 px-6 lg:px-20">
+      <div class="max-w-5xl mx-auto reveal">
+        <h3 class="text-2xl font-bold text-[#0A7075] mb-4">Kontak</h3>
+        <p class="text-gray-700">Untuk bantuan atau pertanyaan lebih lanjut</p>
+
+        <div class="mt-6 grid md:grid-cols-2 gap-6">
+          <!-- Pusat Layanan -->
+          <div
+            class="bg-[var(--brand-900)]/5 rounded-2xl p-6 card border border-gray-100 shadow-sm hover:shadow-lg transition duration-300"
+          >
+            <h4 class="font-semibold text-[var(--brand-800)]">Pusat Layanan</h4>
+            <p class="text-gray-600 mt-2 text-sm">
+              Layanan bantuan terkait pengajuan kenaikan pangkat ASN.
+            </p>
+
+            <div class="mt-4 space-y-3">
+              <!-- Email -->
+              <div class="flex items-center gap-3 group">
+                <svg
+                  class="w-6 h-6 text-[var(--brand-700)] group-hover:rotate-12 transition-transform duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 2H8a2 2 0 00-2 2v16l6-3 6 3V4a2 2 0 00-2-2z"
+                  />
+                </svg>
+                <a
+                  href="mailto:Djefrimage2@gmail.com"
+                  class="text-gray-700 hover:text-[var(--brand-700)] transition"
+                  >Djefrimage2@gmail.com</a
+                >
+              </div>
+
+              <!-- WhatsApp -->
+              <div class="flex items-center gap-3 group">
+                <svg
+                  class="w-6 h-6 text-[var(--brand-700)] group-hover:scale-110 group-hover:text-[var(--brand-800)] transition-all duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.54 4.62a1 1 0 01-.32 1.11l-2.48 1.86a12.05 12.05 0 006.11 6.11l1.86-2.48a1 1 0 011.11-.32l4.62 1.54a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.16 21 3 14.84 3 7V6z"
+                  />
+                </svg>
+                <a
+                  href="https://wa.me/6281337431290?text=Halo%20Admin%20SITANGKAS,%20saya%20membutuhkan%20bantuan."
+                  target="_blank"
+                  class="text-gray-700 hover:text-[var(--brand-700)] transition"
+                  >+62 813-3743-1290</a
+                >
+              </div>
+            </div>
+
+            <!-- Tombol WhatsApp -->
+            <div class="mt-6">
+              <a
+                href="https://wa.me/6281337431290?text=Halo%20Admin%20SITANGKAS,%20saya%20membutuhkan%20bantuan."
+                target="_blank"
+                class="inline-flex items-center gap-3 bg-[var(--brand-900)] text-white px-5 py-3 rounded-lg hover:bg-[var(--brand-700)] transition-all duration-300 group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 group-hover:animate-pulse"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M20.52 3.48A11.78 11.78 0 0012.06.5 11.9 11.9 0 001.5 11.96c0 2.06.55 3.98 1.6 5.7L.5 23.5l6.03-1.58a11.9 11.9 0 005.53 1.35h.01c6.52 0 11.9-5.28 11.9-11.79a11.78 11.78 0 00-2.47-7.5zM12.06 21.48h-.01a9.24 9.24 0 01-4.7-1.32l-.34-.21-3.59.94.96-3.5-.22-.36A9.19 9.19 0 012.86 11.96c0-5.04 4.1-9.14 9.2-9.14 2.46 0 4.77.96 6.52 2.71a9.1 9.1 0 012.7 6.43c0 5.04-4.09 9.14-9.21 9.14zM17 15.2c-.29-.14-1.71-.84-1.98-.94-.27-.1-.46-.14-.66.14-.2.28-.78.94-.96 1.13-.18.2-.36.22-.66.08-.29-.14-1.23-.45-2.34-1.44-.87-.77-1.46-1.72-1.63-2.01-.17-.29-.02-.44.12-.58.12-.12.27-.31.41-.47.14-.16.19-.27.29-.46.1-.19.05-.35-.03-.49-.08-.14-.66-1.6-.91-2.19-.24-.58-.49-.5-.66-.51l-.56-.01c-.19 0-.5.07-.76.36-.27.29-1.05 1.03-1.05 2.5 0 1.47 1.08 2.9 1.23 3.1.14.19 2.12 3.23 5.13 4.53 3.01 1.31 3.01.87 3.56.82.55-.06 1.78-.72 2.03-1.42.25-.7.25-1.3.17-1.42-.08-.12-.27-.19-.56-.33z"
+                  />
+                </svg>
+                Hubungi via WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <!-- Jam Kerja & Lokasi -->
+          <div
+            class="bg-white rounded-2xl p-6 card border border-gray-100 shadow-sm hover:shadow-lg transition duration-300"
+          >
+            <h4 class="font-semibold text-[var(--brand-800)]">
+              Jam Kerja & Lokasi
+            </h4>
+            <p class="text-gray-600 mt-2 text-sm">
+              Senin - Jumat, 08:00 - 16:00
+            </p>
+            <div class="mt-3 text-sm text-gray-600">
+              <p>Dinas Pertanian Kabupaten Sikka</p>
+              <p class="mt-2">Hubungi nomor WA untuk penjadwalan kunjungan.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Animasi Reveal -->
+      <style>
+        .reveal {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: all 0.8s ease;
+        }
+        .reveal.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        @media (prefers-color-scheme: dark) {
+          #kontak {
+            background-color: #0b1416;
+            color: #e6f1f2;
+          }
+          #kontak .card {
+            background-color: #152022;
+            border-color: rgba(255, 255, 255, 0.05);
+          }
+        }
+      </style>
+
+      <script>
+        (() => {
+          const revealEls = document.querySelectorAll(".reveal");
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add("visible");
+              });
+            },
+            { threshold: 0.1 }
+          );
+          revealEls.forEach((el) => observer.observe(el));
+        })();
+      </script>
     </section>
 
     <!-- Footer -->
@@ -514,7 +1254,7 @@
       <p class="italic mb-1">
         "Transparan, Cepat, dan Akuntabel untuk ASN yang Profesional."
       </p>
-      © <span id="year"></span> SITANGKAS — Dinas Pertanian Kabupaten Sikka
+      © <span id="year"></span> SI-TANGKAS — Dinas Pertanian Kabupaten Sikka
     </footer>
 
     <!-- Script -->
@@ -523,11 +1263,28 @@
 
       const menuBtn = document.getElementById("menuBtn");
       const mobileMenu = document.getElementById("mobileMenu");
-      let menuOpen = false;
 
       menuBtn.addEventListener("click", () => {
-        menuOpen = !menuOpen;
-        mobileMenu.classList.toggle("hidden", !menuOpen);
+        menuBtn.classList.toggle("active");
+        mobileMenu.classList.toggle("hidden");
+        mobileMenu.classList.toggle("show");
+      });
+
+      const reveals = document.querySelectorAll(".reveal");
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      reveals.forEach((r, i) => {
+        r.style.transitionDelay = i * 0.06 + "s";
+        io.observe(r);
       });
     </script>
   </body>
