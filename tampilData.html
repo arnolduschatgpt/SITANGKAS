@@ -3,11 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tampilan Data Usulan Kenaikan Pangkat — SITANGKAS</title>
+    <title>Data Usulan Kenaikan Pangkat — SI-TANGKAS</title>
     <link
       rel="icon"
-      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png
-"
+      href="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/ec06e4f627f98e12b5d769445e27d9a16d1262c1/logo.png"
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -20,15 +19,11 @@
         font-family: "Inter", sans-serif;
         background: #f4f8fa;
       }
-
-      /* Keep footer bottom stable */
       main {
         min-height: calc(100vh - 180px);
         display: flex;
         flex-direction: column;
       }
-
-      /* Table Base */
       .table-wrap {
         width: 100%;
         overflow-x: auto;
@@ -48,7 +43,6 @@
         top: 0;
         z-index: 10;
       }
-
       td,
       th {
         padding: 10px 12px;
@@ -56,15 +50,12 @@
         font-size: 13px;
         white-space: nowrap;
       }
-
       tbody tr:nth-child(even) td {
         background: #f7fbfc;
       }
       tbody tr:hover td {
         background: #e6f7f9 !important;
       }
-
-      /* Freeze Desktop Only */
       .freeze-col {
         position: sticky;
         left: 0;
@@ -77,8 +68,6 @@
         z-index: 11;
         background: white;
       }
-
-      /* Mobile fix */
       @media (max-width: 768px) {
         .freeze-col,
         .freeze-col-2 {
@@ -94,8 +83,6 @@
           min-width: 170px;
         }
       }
-
-      /* Preview Button */
       .badge-preview {
         display: inline-flex;
         align-items: center;
@@ -106,8 +93,27 @@
         color: white;
         border-radius: 6px;
       }
-
-      /* Skeleton Loader */
+      .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        font-weight: 500;
+      }
+      .badge-sesuai {
+        background-color: #4ade80;
+        color: #065f46;
+      } /* soft green */
+      .badge-tidak {
+        background-color: #f87171;
+        color: #7f1d1d;
+      } /* soft red */
+      .badge-menunggu {
+        background-color: #d1d5db;
+        color: #374151;
+      } /* soft gray */
       .skeleton {
         background: linear-gradient(
           90deg,
@@ -130,8 +136,6 @@
       .skeleton-row td {
         padding: 12px;
       }
-
-      /* Fade transition */
       .fade-out {
         opacity: 0;
         transition: 0.6s ease-out;
@@ -145,36 +149,18 @@
       }
     </style>
   </head>
-
   <body>
-    <script>
-      // 🔒 Cegah akses login jika sudah login & token masih aktif
-      const token = localStorage.getItem("token");
-      const expiredAt = localStorage.getItem("expiredAt");
-
-      if (token && expiredAt) {
-        const now = new Date();
-        const expiry = new Date(expiredAt);
-
-        if (!isNaN(expiry.getTime()) && expiry.getTime() > now.getTime()) {
-          window.location.replace("dashboard.html");
-        } else {
-          // Token kadaluarsa → hapus semua data login
-          localStorage.clear();
-        }
-      }
-    </script>
-    <!-- NAVBAR -->
+    <!-- NAVBAR & HEADER -->
     <nav class="bg-white shadow-md fixed w-full z-50 border-b">
       <div
         class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center"
       >
         <div class="flex items-center gap-3">
           <img
-            src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+            src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/ec06e4f627f98e12b5d769445e27d9a16d1262c1/logo.png"
             class="w-10 h-10"
           />
-          <span class="text-lg font-bold text-[#0A7075]">SITANGKAS</span>
+          <span class="text-lg font-bold text-[#0A7075]">SI-TANGKAS</span>
         </div>
         <a
           href="index.html"
@@ -184,7 +170,6 @@
       </div>
     </nav>
 
-    <!-- HEADER -->
     <header
       class="pt-28 pb-10 text-center bg-gradient-to-br from-[#032F30] to-[#0A7075] text-white"
     >
@@ -193,14 +178,13 @@
 
     <main class="max-w-7xl mx-auto p-4 py-10">
       <div class="bg-white p-4 rounded-2xl shadow-md">
-        <!-- ✅ LOADING -->
         <div
           id="loading"
           class="py-14 flex flex-col items-center gap-4 text-[#0A7075]"
         >
           <div class="relative">
             <img
-              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/a2c0181f0bff56db8222e843710d3f100d3ad6d8/logo.png"
+              src="https://raw.githubusercontent.com/arnolduschatgpt/SITANGKAS/ec06e4f627f98e12b5d769445e27d9a16d1262c1/logo.png"
               class="w-14 h-14 animate-spin opacity-90"
               style="animation-duration: 1.3s"
             />
@@ -208,10 +192,8 @@
               class="absolute inset-0 rounded-full animate-ping border-2 border-[#0A7075] opacity-20"
             ></div>
           </div>
-          <div class="font-semibold animate-pulse">Memuat Data SITANGKAS…</div>
+          <div class="font-semibold animate-pulse">Memuat Data SI-TANGKAS…</div>
           <p class="text-xs text-gray-500">Mengambil data dari server…</p>
-
-          <!-- Skeleton container -->
           <div class="table-wrap mt-6 w-full">
             <table>
               <tbody id="skeletonBody"></tbody>
@@ -219,7 +201,6 @@
           </div>
         </div>
 
-        <!-- ✅ REAL TABLE -->
         <div id="tableContainer" class="table-wrap hidden">
           <table id="dataTable">
             <thead
@@ -230,14 +211,12 @@
           </table>
         </div>
 
-        <!-- Pagination -->
         <div
           class="mt-4 flex justify-between items-center text-sm gap-4 flex-wrap"
         >
           <button id="prevPage" class="px-3 py-1 border rounded">‹ Prev</button>
           <span id="pageInfo"></span>
           <button id="nextPage" class="px-3 py-1 border rounded">Next ›</button>
-
           <select id="rowsSelect" class="border rounded px-2 py-1">
             <option value="10">10 Baris</option>
             <option value="25">25 Baris</option>
@@ -252,12 +231,12 @@
       <p class="italic mb-1">
         "Transparan, Cepat, dan Akuntabel untuk ASN yang Profesional."
       </p>
-      © <span id="year"></span> SITANGKAS — Dinas Pertanian Kabupaten Sikka
+      © <span id="year"></span> SI-TANGKAS — Dinas Pertanian Kabupaten Sikka
     </footer>
 
     <script>
       const API_URL =
-        "https://script.google.com/macros/s/AKfycbzcSAMXTjXUWR2cSf5SA7RiEP1mT6Sxw2NRv8YcppQ8sHtYm00Uc1IeKvMTYJzZ0gfV/exec";
+        "https://script.google.com/macros/s/AKfycbzcSAMXTjXUWR2cSf5SA7RiEP1mT6Sxw2NRv8YcppQ8sHtYm00Uc1IeKvMTYJzZ0gfV/exec"; // Ganti dengan GAS URL
       document.getElementById("year").textContent = new Date().getFullYear();
 
       const columns = [
@@ -280,14 +259,13 @@
         "Sertifikat Ukom (Bagi kenaikan jabatan)",
         "FC. SK Mutasi (Jika Berpindah Instansi Atau Jabatan)",
         "Fc. SKP 2 Tahun Terakhir",
-        "Pernyataan Keaslian Data",
+        "Keterangan",
+        "Status",
       ];
 
       let allData = [],
         page = 1,
         limit = 10;
-
-      // Timestamp WITA
       const dtFormat = new Intl.DateTimeFormat("id-ID", {
         weekday: "long",
         day: "numeric",
@@ -299,13 +277,12 @@
         timeZone: "Asia/Makassar",
       });
 
-      // ✅ Generate Skeleton Rows
       function renderSkeleton() {
         const sk = document.getElementById("skeletonBody");
         for (let i = 0; i < 6; i++) {
           let row = "<tr class='skeleton-row'>";
-          for (let j = 0; j < 8; j++) {
-            row += `<td><div class='skeleton h-4 w-24'></div></td>`;
+          for (let j = 0; j < columns.length; j++) {
+            row += `<td><div class='skeleton h-4 w-full'></div></td>`;
           }
           row += "</tr>";
           sk.insertAdjacentHTML("beforeend", row);
@@ -313,7 +290,6 @@
       }
       renderSkeleton();
 
-      // Pagination handlers
       rowsSelect.onchange = (e) => {
         limit = parseInt(e.target.value);
         page = 1;
@@ -332,7 +308,6 @@
         }
       };
 
-      // Load Data
       fetch(API_URL)
         .then((r) => r.json())
         .then((res) => {
@@ -346,7 +321,6 @@
         const el = document.getElementById("loading");
         el.classList.add("fade-out");
         setTimeout(() => el.remove(), 600);
-
         const tc = document.getElementById("tableContainer");
         tc.classList.remove("hidden");
         setTimeout(() => tc.classList.add("show"), 40);
@@ -373,18 +347,21 @@
             const td = document.createElement("td");
             let v = r[col] || "-";
 
-            // Timestamp format
-            if (col === "Timestamp" && v && !isNaN(Date.parse(v))) {
+            if (col === "Timestamp" && v && !isNaN(Date.parse(v)))
               v = dtFormat.format(new Date(v)) + " WITA";
-            }
 
-            // Preview buttons for Google Drive files
             if (/Fc\.|PAK|SK|Sertifikat/i.test(col)) {
               td.innerHTML =
                 v && v !== "-"
-                  ? `<a class="badge-preview" target="_blank" href="${v}">
-<i class="fa-solid fa-eye"></i>Preview</a>`
+                  ? `<a class="badge-preview" target="_blank" href="${v}"><i class="fa-solid fa-eye"></i>Preview</a>`
                   : `<span class="text-gray-400 italic">-</span>`;
+            } else if (col === "Status") {
+              if (v === "Sesuai")
+                td.innerHTML = `<span class="badge-status badge-sesuai"><i class="fa-solid fa-check"></i> Sesuai</span>`;
+              else if (v === "Tidak Sesuai")
+                td.innerHTML = `<span class="badge-status badge-tidak"><i class="fa-solid fa-xmark"></i> Tidak Sesuai</span>`;
+              else
+                td.innerHTML = `<span class="badge-status badge-menunggu"><i class="fa-solid fa-clock"></i> Menunggu</span>`;
             } else td.textContent = v;
 
             if (col === "Nama Lengkap") td.classList.add("freeze-col");
